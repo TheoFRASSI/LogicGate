@@ -13,17 +13,17 @@ Princ::Princ(QWidget *parent) :
 
 void Princ::setSliderRadius(double radius)
 {
-    qDebug() << __FUNCTION__ << radius << sender();
+    //qDebug() << __FUNCTION__ << radius << sender();
     int value = (radius*20);
     if (sli_radius->value() != value) {
-        qDebug() << "  sli_radius->setvalue()";
+        //qDebug() << "  sli_radius->setvalue()";
         sli_radius->setValue(value);
     }
 }
 
 void Princ::onSliderRadius(int value)
 {
-    qDebug() << __FUNCTION__ << value << sender();
-    qDebug() << "  emit radiusChanged()";
+    //qDebug() << __FUNCTION__ << value << sender();
+    //qDebug() << "  emit radiusChanged()";
     emit glarea->radiusChanged(value/20.0);
 }

@@ -9,14 +9,14 @@
 GLArea::GLArea(QWidget *parent) :
     QOpenGLWidget(parent)
 {
-    qDebug() << "init GLArea" ;
+    //qDebug() << "init GLArea" ;
 
     // Ce n'est pas indispensable
     QSurfaceFormat sf;
     sf.setDepthBufferSize(24);
     sf.setSamples(16); // antialiasing
     setFormat(sf);
-    qDebug() << "Depth is"<< format().depthBufferSize();
+    //qDebug() << "Depth is"<< format().depthBufferSize();
 
     setEnabled(true);  // événements clavier et souris
     setFocusPolicy(Qt::StrongFocus); // accepte focus
@@ -30,7 +30,7 @@ GLArea::GLArea(QWidget *parent) :
 
 GLArea::~GLArea()
 {
-    qDebug() << "destroy GLArea";
+    //qDebug() << "destroy GLArea";
 
     delete m_timer;
 
@@ -46,7 +46,7 @@ GLArea::~GLArea()
 
 void GLArea::initializeGL()
 {
-    qDebug() << __FUNCTION__ ;
+    //qDebug() << __FUNCTION__ ;
     initializeOpenGLFunctions();
     glEnable(GL_DEPTH_TEST);
 }
@@ -62,7 +62,7 @@ void GLArea::doProjection()
 
 void GLArea::resizeGL(int w, int h)
 {
-    qDebug() << __FUNCTION__ << w << h;
+    //qDebug() << __FUNCTION__ << w << h;
 
     // C'est fait par défaut
     glViewport(0, 0, w, h);
@@ -117,12 +117,18 @@ void GLArea::dessinerFacette(cylindre cyl, bool vertical){
 
 void GLArea::paintGL()
 {
-    qDebug() << __FUNCTION__ ;
+    //qDebug() << __FUNCTION__ ;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glLoadIdentity();
     gluLookAt (0, 0, 3.0, 0, 0, 0, 0, 1, 0);
-    //glRotatef(m_angle,0.1,1.0,0.0);
+    glRotatef(m_alpha,0.1,1.0,0.0);
+
+    float GH, HJ2, HI, JI;
+    GH = sqrt(pow(cyl_H.posx - cyl_G.posx, 2) + pow(cyl_H.posy - cyl_G.posy, 2));
+    HJ2 = pow(cyl_J.posx - cyl_H.posx,2) + pow(cyl_J.posy - cyl_H.posy,2); // HJ2 = IJ2 + HI2
+    HI = sqrt(pow(cyl_H.x - cyl_H.x,2) + pow(0.f - cyl_H.y, 2));
+    JI = sqrt(pow(cyl_H.x - cyl_J.x, 2) + pow(0.f - cyl_J.y, 2));
 
     glPushMatrix();
         glRotatef(-m_angle,0,0,1);
@@ -136,40 +142,37 @@ void GLArea::paintGL()
     glPopMatrix();
 
     glPushMatrix();
-        cyl_H.x = (cyl_roue.x + cyl_roue.r_cyl - cyl_extrD_JH.r_cyl/2) * cos(qDegreesToRadians(-m_angle));
-        cyl_H.y = (cyl_roue.y + cyl_roue.r_cyl - cyl_extrD_JH.r_cyl/2) * sin(qDegreesToRadians(-m_angle));
+        cyl_H.x = (cyl_roue.x + cyl_roue.r_cyl - cyl_extrD_JH.r_cyl) * cos(qDegreesToRadians(-m_angle));
+        cyl_H.y = (cyl_roue.y + cyl_roue.r_cyl - cyl_extrD_JH.r_cyl) * sin(qDegreesToRadians(-m_angle));
         glTranslatef(cyl_H.x, cyl_H.y, cyl_H.z);
         dessinerCylindre(cyl_H, false);
     glPopMatrix();
 
     glPushMatrix();
-
-        float GH, HJ2, HI, JI;
-        GH = sqrt(pow(cyl_H.x-cyl_G.x,2) + pow(cyl_H.y-cyl_G.y,2));
-        HJ2 = pow(cyl_J.x-cyl_H.x,2) + pow(cyl_J.y-cyl_H.y,2); // HJ2 = IJ2 + HI2
-        HI = sqrt(pow(cyl_H.x-cyl_H.x,2) + pow(cyl_H.y-0,2));
-        JI = sqrt(pow(cyl_H.x - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)) - cyl_H.x,2) + pow(cyl_J.y - 0.f ,2));
-
-        /*float xi = cyl_H.x;
-        float yi = cyl_G.y; // = 0
-        float xj = xi - sqrt(HJ2 - pow(GH*sin(m_angle),2));
-        float yj = yi; // = 0*/
-
-        //glTranslatef(cyl_H.x - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(-m_angle)),2)), cyl_G.y, cyl_J.z);
-        glTranslatef(cyl_H.x - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)), cyl_G.y, cyl_J.z);
-        //glTranslatef(cyl_J.x, cyl_J.y, cyl_J.z);
+        cyl_J.x = cyl_H.x - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2));
+        glTranslatef(cyl_J.x, cyl_J.y, cyl_J.z);
         dessinerCylindre(cyl_J, false);
     glPopMatrix();
 
     glPushMatrix();
-        glRotatef(atan(HI/JI),0,0,1.0);
-        //glRotatef(atan((cyl_H.y * sin(qDegreesToRadians(m_angle)))/abs((cyl_H.x * cos(qDegreesToRadians(m_angle)) - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2))) - (cyl_H.x * cos(qDegreesToRadians(m_angle))))),1.0,0.0,0.0);
-        glTranslatef((cyl_H.x - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)) + (cyl_H.x))/2, (cyl_J.y + cyl_H.y)/2, cyl_JH.z);
+        cyl_JH.x =(cyl_J.x + cyl_H.x)/2.f;
+        cyl_JH.y =(cyl_J.y + cyl_H.y)/2.f;
+
+        glTranslatef(cyl_JH.x, cyl_JH.y, cyl_JH.z);
+
+        if(cyl_H.y < 0.f){
+            glRotatef(qRadiansToDegrees(-atan(HI/JI)),0.0,0.0,1.0);
+        } else if(cyl_H.y == 0.f){
+            glRotatef(0.f,0.0,0.0,1.0);
+        } else {
+            glRotatef(qRadiansToDegrees(atan(HI/JI)),0.0,0.0,1.0);
+        }
         dessinerCylindre(cyl_JH, true);
     glPopMatrix();
 
     glPushMatrix();
-        glTranslatef(cyl_KJ.x / 2 + cyl_H.x - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)), cyl_G.y, cyl_KJ.z);
+        cyl_KJ.x =cyl_KJ.posx / 2 + cyl_H.x - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2));
+        glTranslatef(cyl_KJ.x, cyl_KJ.y, cyl_KJ.z);
         dessinerCylindre(cyl_KJ, true);
     glPopMatrix();
 
@@ -179,39 +182,57 @@ void GLArea::paintGL()
     glPopMatrix();
 
     glPushMatrix();
-        //glTranslatef(cyl_extr_KJ.x, cyl_extr_KJ.y, cyl_extr_KJ.z);
-    glTranslatef(cyl_H.x - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)), cyl_G.y, cyl_extr_KJ.z);
+        cyl_extr_KJ.x = cyl_H.x - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2));
+        glTranslatef(cyl_extr_KJ.x, cyl_extr_KJ.y, cyl_extr_KJ.z);
         dessinerCylindre(cyl_extr_KJ, false);
     glPopMatrix();
 
     glPushMatrix();
-        glRotatef(-m_angle,0,0,1.0);
+        cyl_extrD_JH.x = (cyl_roue.x + cyl_roue.r_cyl - cyl_extrD_JH.r_cyl) * cos(qDegreesToRadians(-m_angle));
+        cyl_extrD_JH.y = (cyl_roue.y + cyl_roue.r_cyl - cyl_extrD_JH.r_cyl) * sin(qDegreesToRadians(-m_angle));
         glTranslatef(cyl_extrD_JH.x, cyl_extrD_JH.y, cyl_extrD_JH.z);
         dessinerCylindre(cyl_extrD_JH, false);
     glPopMatrix();
 
     glPushMatrix();
-        glTranslatef(cyl_H.x - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)), cyl_G.y, cyl_extrG_JH.z);
-        //glTranslatef(cyl_extrG_JH.x, cyl_extrG_JH.y, cyl_extrG_JH.z);
+        cyl_extrG_JH.x = cyl_H.x - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2));
+        glTranslatef(cyl_extrG_JH.x, cyl_extrG_JH.y, cyl_extrG_JH.z);
         dessinerCylindre(cyl_extrG_JH, false);
     glPopMatrix();
 }
 
+//void GLArea::on_timer (int id)
+//{
+//    if (!anim_flag) return;
+//    anim_angle += 1;
+//    if (anim_angle >= 360) m_angle = 0;
+//    paintGL();
+//    QTimer* timer = new QTimer();
+//    timer->singleShot(anim_delay,this,on_timer); // on relance le même timer
+//}
+
+//void GLArea::on_timer_rotate(int id)
+//{
+//    if (!anim_rotate) return;
+//    m_angle ++;
+//    paintGL();
+//    glutTimerFunc(anim_delay_rotate, on_timer_rotate, id);  // on relance le même timer
+//}
+
 void GLArea::keyPressEvent(QKeyEvent *ev)
 {
-    qDebug() << __FUNCTION__ << ev->text();
+    //qDebug() << __FUNCTION__ << ev->text();
 
     switch(ev->key()) {
         case Qt::Key_Space :
-            m_angle += 2;
+            m_angle += 5;
             if (m_angle >= 360) m_angle = 0;
             update();
             break;
         case Qt::Key_A :
-            if (m_timer->isActive())
-                m_timer->stop();
-            else m_timer->start();
-            break;
+                    anim_flag = !anim_flag;
+                    if (anim_flag) glutTimerFunc (anim_delay, on_timer, 0);
+                    break;
         case Qt::Key_R :
             if (ev->text() == "r")
                  setRadius(m_radius-0.05);
@@ -250,10 +271,10 @@ void GLArea::onTimeout()
 
 void GLArea::setRadius(GLdouble radius)
 {
-    qDebug() << __FUNCTION__ << radius << sender();
+    //qDebug() << __FUNCTION__ << radius << sender();
     if ( !(fabs(radius - m_radius) < DBL_EPSILON) && radius > 0.01 && radius <= 10) {
         m_radius = radius;
-        qDebug() << "  emit radiusChanged()";
+        //qDebug() << "  emit radiusChanged()";
         emit radiusChanged(radius);
         makeCurrent();
         doProjection();

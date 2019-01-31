@@ -57,6 +57,8 @@ protected:
     void mousePressEvent(QMouseEvent *ev) override;
     void mouseReleaseEvent(QMouseEvent *ev) override;
     void mouseMoveEvent(QMouseEvent *ev) override;
+//    void on_timer(int d);
+//    void GLArea::on_timer_rotate(int id);
 
 private:
     GLfloat m_angle = 0;
@@ -64,6 +66,11 @@ private:
     GLfloat m_alpha = 0;
     GLdouble m_radius = 0.5;
     GLdouble m_ratio = 1;
+//    int anim_angle = 0;
+//    unsigned int anim_delay = 20; // ms
+//    unsigned int anim_delay_rotate = 5; // ms
+//    int anim_flag = 0;
+//    int anim_rotate = 0;
 };
 
 #endif // GLAREA_H
