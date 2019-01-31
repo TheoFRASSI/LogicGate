@@ -23,8 +23,8 @@ public:
         cylindre(GLfloat ep_cyl, GLfloat r_cyl, int nb_fac, GLfloat r, GLfloat g, GLfloat b, GLfloat x, GLfloat y, GLfloat z)
                 :ep_cyl(ep_cyl),r_cyl(r_cyl),nb_fac(nb_fac),r(r),g(g),b(b),x(x),y(y),z(z){}
     };
-   cylindre cyl_piston = cylindre(1.2f, 0.2f, 60, 1, 0.5, 0.5, -1.8f, 0, 0.4f);
-   cylindre cyl_KJ = cylindre(0.8f, 0.05f, 40, 1, 0, 1, -0.8f, 0, 0.4f);
+   cylindre cyl_piston = cylindre(1.2f, 0.2f, 60, 1, 0.5, 0.5, -2.f, 0, 0.4f);
+   cylindre cyl_KJ = cylindre(1.f, 0.05f, 40, 1, 0, 1, -1.f, 0, 0.4f);
    cylindre cyl_extr_KJ = cylindre(0.2f, 0.075f, 60, 1, 0, 1, -0.4f, 0, 0.4f);
    cylindre cyl_extrG_JH = cylindre(0.2f, 0.1f, 60, 0.5, 1, 0.5, -0.4f, 0, 0.2f);
    cylindre cyl_extrD_JH = cylindre(0.2f, 0.1f, 60, 0.5, 1, 0.5, 0.4f, 0, 0.2f);

@@ -158,13 +158,13 @@ void GLArea::paintGL()
     glPopMatrix();
 
     glPushMatrix();
-        //glRotatef(-m_angle,0,0,1.0);
-        glTranslatef((cyl_J.x + cyl_H.x)/2, (cyl_J.y + cyl_H.y)/2, cyl_JH.z);
+        glRotatef(atan((cyl_H.y * sin(qDegreesToRadians(m_angle)))/abs((cyl_H.x * cos(qDegreesToRadians(m_angle)) - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2))) - (cyl_H.x * cos(qDegreesToRadians(m_angle))))),0,0,1.0);
+        glTranslatef((cyl_H.x * cos(qDegreesToRadians(m_angle)) - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)) + (cyl_H.x * cos(qDegreesToRadians(m_angle))))/2, (cyl_J.y + cyl_H.y * sin(qDegreesToRadians(m_angle)))/2, cyl_JH.z);
         dessinerCylindre(cyl_JH, true);
     glPopMatrix();
 
     glPushMatrix();
-        glTranslatef(cyl_KJ.x, cyl_KJ.y, cyl_KJ.z);
+        glTranslatef(cyl_KJ.x / 2 + cyl_H.x * cos(qDegreesToRadians(m_angle)) - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)), cyl_G.y, cyl_KJ.z);
         dessinerCylindre(cyl_KJ, true);
     glPopMatrix();
 
@@ -186,7 +186,6 @@ void GLArea::paintGL()
     glPopMatrix();
 
     glPushMatrix();
-        qDebug() << "sin : " << sin(qDegreesToRadians(-m_angle)) << "  cyl_H.x : " << cyl_H.x;
         glTranslatef(cyl_H.x * cos(qDegreesToRadians(m_angle)) - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)), cyl_G.y, cyl_extrG_JH.z);
         //glTranslatef(cyl_extrG_JH.x, cyl_extrG_JH.y, cyl_extrG_JH.z);
         dessinerCylindre(cyl_extrG_JH, false);
