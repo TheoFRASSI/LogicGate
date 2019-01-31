@@ -20,8 +20,9 @@ public:
         int nb_fac;
         GLfloat r, g, b;
         GLfloat x, y, z;
-        cylindre(GLfloat ep_cyl, GLfloat r_cyl, int nb_fac, GLfloat r, GLfloat g, GLfloat b, GLfloat x, GLfloat y, GLfloat z)
-                :ep_cyl(ep_cyl),r_cyl(r_cyl),nb_fac(nb_fac),r(r),g(g),b(b),x(x),y(y),z(z){}
+        GLfloat posx, posy, posz;
+        cylindre(GLfloat ep_cyl, GLfloat r_cyl, int nb_fac, GLfloat r, GLfloat g, GLfloat b, GLfloat posx, GLfloat posy, GLfloat posz)
+                :ep_cyl(ep_cyl),r_cyl(r_cyl),nb_fac(nb_fac),r(r),g(g),b(b),posx(posx),posy(posy),posz(posz),x(posx),y(posy),z(posz){}
     };
    cylindre cyl_piston = cylindre(1.2f, 0.2f, 60, 1, 0.5, 0.5, -2.f, 0, 0.4f);
    cylindre cyl_KJ = cylindre(1.f, 0.05f, 40, 1, 0, 1, -1.f, 0, 0.4f);

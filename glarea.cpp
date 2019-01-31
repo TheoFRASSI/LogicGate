@@ -136,35 +136,40 @@ void GLArea::paintGL()
     glPopMatrix();
 
     glPushMatrix();
-        glRotatef(-m_angle,0,0,1.0);
+        cyl_H.x = (cyl_roue.x + cyl_roue.r_cyl - cyl_extrD_JH.r_cyl/2) * cos(qDegreesToRadians(-m_angle));
+        cyl_H.y = (cyl_roue.y + cyl_roue.r_cyl - cyl_extrD_JH.r_cyl/2) * sin(qDegreesToRadians(-m_angle));
         glTranslatef(cyl_H.x, cyl_H.y, cyl_H.z);
         dessinerCylindre(cyl_H, false);
     glPopMatrix();
 
     glPushMatrix();
 
-        float GH, HJ2;
+        float GH, HJ2, HI, JI;
         GH = sqrt(pow(cyl_H.x-cyl_G.x,2) + pow(cyl_H.y-cyl_G.y,2));
         HJ2 = pow(cyl_J.x-cyl_H.x,2) + pow(cyl_J.y-cyl_H.y,2); // HJ2 = IJ2 + HI2
+        HI = sqrt(pow(cyl_H.x-cyl_H.x,2) + pow(cyl_H.y-0,2));
+        JI = sqrt(pow(cyl_H.x - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)) - cyl_H.x,2) + pow(cyl_J.y - 0.f ,2));
+
         /*float xi = cyl_H.x;
         float yi = cyl_G.y; // = 0
         float xj = xi - sqrt(HJ2 - pow(GH*sin(m_angle),2));
         float yj = yi; // = 0*/
 
         //glTranslatef(cyl_H.x - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(-m_angle)),2)), cyl_G.y, cyl_J.z);
-        glTranslatef(cyl_H.x * cos(qDegreesToRadians(m_angle)) - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)), cyl_G.y, cyl_J.z);
+        glTranslatef(cyl_H.x - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)), cyl_G.y, cyl_J.z);
         //glTranslatef(cyl_J.x, cyl_J.y, cyl_J.z);
         dessinerCylindre(cyl_J, false);
     glPopMatrix();
 
     glPushMatrix();
-        glRotatef(atan((cyl_H.y * sin(qDegreesToRadians(m_angle)))/abs((cyl_H.x * cos(qDegreesToRadians(m_angle)) - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2))) - (cyl_H.x * cos(qDegreesToRadians(m_angle))))),0,0,1.0);
-        glTranslatef((cyl_H.x * cos(qDegreesToRadians(m_angle)) - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)) + (cyl_H.x * cos(qDegreesToRadians(m_angle))))/2, (cyl_J.y + cyl_H.y * sin(qDegreesToRadians(m_angle)))/2, cyl_JH.z);
+        glRotatef(atan(HI/JI),0,0,1.0);
+        //glRotatef(atan((cyl_H.y * sin(qDegreesToRadians(m_angle)))/abs((cyl_H.x * cos(qDegreesToRadians(m_angle)) - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2))) - (cyl_H.x * cos(qDegreesToRadians(m_angle))))),1.0,0.0,0.0);
+        glTranslatef((cyl_H.x - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)) + (cyl_H.x))/2, (cyl_J.y + cyl_H.y)/2, cyl_JH.z);
         dessinerCylindre(cyl_JH, true);
     glPopMatrix();
 
     glPushMatrix();
-        glTranslatef(cyl_KJ.x / 2 + cyl_H.x * cos(qDegreesToRadians(m_angle)) - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)), cyl_G.y, cyl_KJ.z);
+        glTranslatef(cyl_KJ.x / 2 + cyl_H.x - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)), cyl_G.y, cyl_KJ.z);
         dessinerCylindre(cyl_KJ, true);
     glPopMatrix();
 
@@ -175,7 +180,7 @@ void GLArea::paintGL()
 
     glPushMatrix();
         //glTranslatef(cyl_extr_KJ.x, cyl_extr_KJ.y, cyl_extr_KJ.z);
-    glTranslatef(cyl_H.x * cos(qDegreesToRadians(m_angle)) - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)), cyl_G.y, cyl_extr_KJ.z);
+    glTranslatef(cyl_H.x - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)), cyl_G.y, cyl_extr_KJ.z);
         dessinerCylindre(cyl_extr_KJ, false);
     glPopMatrix();
 
@@ -186,7 +191,7 @@ void GLArea::paintGL()
     glPopMatrix();
 
     glPushMatrix();
-        glTranslatef(cyl_H.x * cos(qDegreesToRadians(m_angle)) - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)), cyl_G.y, cyl_extrG_JH.z);
+        glTranslatef(cyl_H.x - sqrt(HJ2 - pow(GH * sin(qDegreesToRadians(m_angle)),2)), cyl_G.y, cyl_extrG_JH.z);
         //glTranslatef(cyl_extrG_JH.x, cyl_extrG_JH.y, cyl_extrG_JH.z);
         dessinerCylindre(cyl_extrG_JH, false);
     glPopMatrix();
