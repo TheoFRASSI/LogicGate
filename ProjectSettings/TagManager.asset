@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Porte
+  - Objectif
+  - Cable
+  - Interrupteur
+  - Socle
+  - music
+  - Panel
+  - ObjMult
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - Porte
+  - Cable
+  - Socle
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Porte
+    uniqueID: 2439308655
+    locked: 0
+  - name: Socle
+    uniqueID: 3148402347
+    locked: 0
+  - name: Cable
+    uniqueID: 564509023
+    locked: 0
